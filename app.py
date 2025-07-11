@@ -9,7 +9,7 @@ import gdown
 import cv2
 import numpy as np
 from flask import Flask, request, jsonify
-from flask_cors import CORS  # ← مهم جدًا
+
 from tensorflow.keras.models import load_model
 from PIL import Image
 
@@ -34,7 +34,6 @@ face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_fronta
 
 # إنشاء التطبيق
 app = Flask(__name__)
-CORS(app)  # ← لتفادي مشاكل CORS مع HTML أو JavaScript
 
 @app.route("/predict", methods=["POST"])
 def predict():
