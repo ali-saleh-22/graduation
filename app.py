@@ -9,7 +9,6 @@ import gdown
 import cv2
 import numpy as np
 from flask import Flask, request, jsonify
-
 from tensorflow.keras.models import load_model
 from PIL import Image
 
@@ -24,10 +23,8 @@ if not os.path.exists(MODEL_PATH):
     gdown.download(MODEL_URL, MODEL_PATH, quiet=True)
     print("✅ تم تحميل النموذج بنجاح.")
 
-# تحميل النموذج مباشرة عند بدء السيرفر (بدون lazy)
-print("⏳ جاري تحميل النموذج...")
-model = load_model(MODEL_PATH)
-print("✅ النموذج جاهز.")
+# Lazy load للموديل
+model = None
 
 # تحميل كاشف الوجه
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
@@ -37,6 +34,12 @@ app = Flask(__name__)
 
 @app.route("/predict", methods=["POST"])
 def predict():
+    global model
+    if model is None:
+        print("⏳ تحميل الموديل عند أول استخدام...")
+        model = load_model(MODEL_PATH)
+        print("✅ تم تحميل الموديل.")
+
     if "image" not in request.files:
         return jsonify({"error": "لم يتم رفع أي صورة"}), 400
 
