@@ -12,8 +12,11 @@ from flask import Flask, request, jsonify
 from tensorflow.keras.models import load_model
 from PIL import Image
 
-# روابط الموديل
-MODEL_ID = "1aT-94D1rSPydiY4ulmhVH8NLVpAtv6EJ"
+# 🟡 قراءة MODEL_ID من Environment Variable
+MODEL_ID = os.getenv("MODEL_ID")
+if not MODEL_ID:
+    raise ValueError("❌ لم يتم تعيين المتغير البيئي MODEL_ID")
+
 MODEL_URL = f"https://drive.google.com/uc?id={MODEL_ID}"
 MODEL_PATH = "Detection_model.keras"
 
